@@ -24,6 +24,13 @@ function getBoard() {
     ];
 }
 
+function getKing() {
+    return [0,7];
+}
+function getEscapes() {
+    return [[0,6],[1,7],[1,6]];
+}
+
 // Get the list of valid moves for selected piece
 function getMoves(x, y) { // coordinates of the piece
     var board[8][8] = getBoard();
@@ -65,8 +72,6 @@ function getMoves(x, y) { // coordinates of the piece
     }
 }
 
-
-
 template Main() {
    
     var board[8][8] = getBoard(); 
@@ -88,8 +93,10 @@ template valid() {
     signal input end[2];
     signal piece;
     signal ender;
-    var board[8][8] = getBoard(); 
-    var moves[8][8] = getMoves(start[0],start[1]);
+    signal checker;
+    var board[8][8] = getBoard(); // Starting board
+    var moves[8][8] = getMoves(start[0],start[1]); // Valid moves
+    var king[2] = getKing();
     var pieceVar = board[start[0]][start[1]];
     var endX = end[0];
     var endY = end[1];
@@ -102,21 +109,30 @@ template valid() {
     Check if move is valid by checking
     whether end position for the piece is valid
     */
-    // Valid moves for Queen
-    /*
-    var moves3[12][2] = [[0,4],[1,5],[0,6],[1,6],[3,6],[4,6],[5,6],[6,6],[7,6],[1,7],[2,7],[3,7]];
-    var endBool = 0;
-    for(var i = 0; i < 12; i++) {
-        if(moves3[i][0] == endX && moves3[i][1] == endY) {
-            log(i);
-            endBool = 1;
-        }
-    }
-    ender <-- endBool;
-    ender === 1;
-    */
     ender <-- moves[endX][endY];
     ender === 1;
+
+    // Check if move is check(mate)
+    var mate = 0;
+    if(endX == king[0] || endY == king[1] || (endX-endY == king[0]-king[1] || endX+endY == king[0]+king[1])) {
+        log("CHECK");
+        mate = 1;
+        var escapes[3][2] = getEscapes(); // make this generic
+        for (var i = 0; i < 3; i++) {
+            king[0] = escapes[i][0];
+            king[1] = escapes[i][1];
+            if(endX == king[0] || endY == king[1] || (endX-endY == king[0]-king[1] || endX+endY == king[0]+king[1])) {
+                log("ye");
+            }
+            else {
+                mate = 0;
+            }
+        }
+    }
+    log("MATE???:");
+    log(mate);
+    checker <-- mate;
+    checker === 1;
 }
 
 

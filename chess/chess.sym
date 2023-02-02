@@ -8,3 +8,4 @@
 8,-1,0,main.checkMove.end[1]
 9,-1,0,main.checkMove.piece
 10,-1,0,main.checkMove.ender
+11,-1,0,main.checkMove.checker
