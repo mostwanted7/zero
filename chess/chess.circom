@@ -26,19 +26,33 @@ function getBoard() {
 }
 
 template Main() {
-
-   var board[8][8] = getBoard(); 
-   signal input start[2]; // Start position
-   signal input end[2]; // End position
    
-   // Check that there is a piece at start position
-   log("BOARD VALUE AT POSITION:");
-   log(board[start[0]][start[1]]); 
-   assert(board[start[0]][start[1]] != 0);
-   // Check that the piece is white
-   assert(board[start[0]][start[1]] % 2 == 1);
+    var board[8][8] = getBoard(); 
+    signal input start[2];
+    signal input end[2];
+    component checkMove = valid();    
+    checkMove.start <== start;
+    checkMove.end <== end;
 
-   
 }
+
+template valid() {
+
+    /*
+    Checks if a valid piece is selected by checking
+    that the selected square has an odd number piece
+    */
+    signal input start[2]; 
+    signal input end[2];
+    signal output piece;
+    var board[8][8] = getBoard(); 
+    var pieceVar = board[start[0]][start[1]];
+    log(pieceVar);
+    pieceVar = pieceVar % 2; 
+    piece <-- pieceVar;
+    piece === 1;
+
+}
+
 
 component main = Main();
