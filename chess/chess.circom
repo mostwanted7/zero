@@ -77,9 +77,12 @@ template Main() {
     var board[8][8] = getBoard(); 
     signal input start[2];
     signal input end[2];
+    signal output bug;
     component checkMove = valid();    
     checkMove.start <== start;
     checkMove.end <== end;
+    checkMove.checker === 1;
+    bug <== 0;
 
 }
 
@@ -93,7 +96,7 @@ template valid() {
     signal input end[2];
     signal piece;
     signal ender;
-    signal checker;
+    signal output checker;
     var board[8][8] = getBoard(); // Starting board
     var moves[8][8] = getMoves(start[0],start[1]); // Valid moves
     var king[2] = getKing();
@@ -132,7 +135,7 @@ template valid() {
     log("MATE???:");
     log(mate);
     checker <-- mate;
-    checker === 1;
+    // checker === 1;
 }
 
 
